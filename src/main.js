@@ -35,7 +35,7 @@ searchForm.addEventListener('submit', async e => {
   }
 
   page = 1;
-
+  hideLoadMoreButton();
   clearGallery();
   showLoader();
 
@@ -66,31 +66,34 @@ searchForm.addEventListener('submit', async e => {
 
 refs.loadMoreBtn.addEventListener('click', async () => {
   page += 1;
-
+  showLoader();
+  hideLoadMoreButton();
   try {
     const { hits: images } = await fetchImages(query, page);
     renderGallery(images);
-    scroll();
+
+    const imageRef = refs.galleryContainer.firstChild;
+    if (imageRef) {
+      const { height } = imageRef.getBoundingClientRect();
+
+      window.scrollBy({
+        top: height * 3,
+        behavior: 'smooth',
+      });
+    }
 
     if (totalImages <= PER_PAGE * page) {
       iziToast.success({
         message: 'We`re sorry, but you`ve reached the end of search results.',
       });
+      hideLoadMoreButton();
       return;
     }
+
+    showLoadMoreButton();
   } catch (e) {
     iziToast.error({ message: e.message });
+  } finally {
+    hideLoader();
   }
 });
-
-export const scroll = () => {
-  const imageRef = refs.galleryContainer.firstChild;
-  if (!imageRef) return;
-
-  const { height } = imageRef.getBoundingClientRect();
-
-  window.scrollBy({
-    top: height * 2,
-    behavior: 'smooth',
-  });
-};
