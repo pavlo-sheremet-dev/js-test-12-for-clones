@@ -72,24 +72,6 @@ refs.loadMoreBtn.addEventListener('click', async () => {
     const { hits: images } = await fetchImages(query, page);
     renderGallery(images);
 
-    const imageRef = refs.galleryContainer.firstChild;
-    if (imageRef) {
-      const { height } = imageRef.getBoundingClientRect();
-
-      window.scrollBy({
-        top: height * 3,
-        behavior: 'smooth',
-      });
-    }
-
-    if (totalImages <= PER_PAGE * page) {
-      iziToast.success({
-        message: 'We`re sorry, but you`ve reached the end of search results.',
-      });
-      hideLoadMoreButton();
-      return;
-    }
-
     showLoadMoreButton();
   } catch (e) {
     iziToast.error({ message: e.message });
