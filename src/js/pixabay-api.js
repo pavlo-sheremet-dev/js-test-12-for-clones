@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { renderGallery } from './render-functions';
 const API_KEY = '47404996-12b53dec464063fd6255bb496';
 
 export const PER_PAGE = 12;
