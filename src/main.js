@@ -34,6 +34,9 @@ searchForm.addEventListener('submit', async e => {
     return;
   }
 
+  page = 1;
+  hideLoadMoreButton();
+  clearGallery();
   showLoader();
 
   try {
@@ -49,6 +52,10 @@ searchForm.addEventListener('submit', async e => {
     }
     renderGallery(images);
 
+    if (totalImages <= PER_PAGE * page) {
+      hideLoadMoreButton();
+      return;
+    }
     showLoadMoreButton();
   } catch (error) {
     iziToast.error({ message: e.message });
@@ -60,7 +67,7 @@ searchForm.addEventListener('submit', async e => {
 refs.loadMoreBtn.addEventListener('click', async () => {
   page += 1;
   showLoader();
-
+  hideLoadMoreButton();
   try {
     const { hits: images } = await fetchImages(query, page);
     renderGallery(images);
@@ -70,7 +77,7 @@ refs.loadMoreBtn.addEventListener('click', async () => {
       iziToast.success({
         message: 'We`re sorry, but you`ve reached the end of search results.',
       });
-
+      hideLoadMoreButton();
       return;
     }
 
