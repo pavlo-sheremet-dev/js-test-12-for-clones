@@ -35,7 +35,7 @@ searchForm.addEventListener('submit', async e => {
   }
 
   page = 1;
-  hideLoadMoreButton();
+
   clearGallery();
   showLoader();
 
@@ -66,8 +66,7 @@ searchForm.addEventListener('submit', async e => {
 
 refs.loadMoreBtn.addEventListener('click', async () => {
   page += 1;
-  showLoader();
-  hideLoadMoreButton();
+
   try {
     const { hits: images } = await fetchImages(query, page);
     renderGallery(images);
@@ -77,15 +76,10 @@ refs.loadMoreBtn.addEventListener('click', async () => {
       iziToast.success({
         message: 'We`re sorry, but you`ve reached the end of search results.',
       });
-      hideLoadMoreButton();
       return;
     }
-
-    showLoadMoreButton();
   } catch (e) {
     iziToast.error({ message: e.message });
-  } finally {
-    hideLoader();
   }
 });
 
