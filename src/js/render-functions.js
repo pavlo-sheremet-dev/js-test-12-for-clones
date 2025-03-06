@@ -1,71 +1,45 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export const refs = {
-  galleryContainer: document.querySelector('ul.gallery'),
-  loader: document.querySelector('.loader'),
-  loadMoreBtn: document.querySelector('.load-more'),
-};
-
-const modal = new SimpleLightbox('a.gallery-link', {
+export const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
 
-const createGalleryMarkup = images => {
-  return (
-    /* HTML */
-    `${images
-      .map(
-        ({
-          webformatURL,
-          largeImageURL,
-          tags,
-          likes,
-          views,
-          comments,
-          downloads,
-          id,
-        }) =>
-          /* HTML */
-          `<li class="gallery-item" id="${id}">
+export function renderGallery(images, galleryContainer, append = false) {
+  const galleryMarkup = images
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) =>
+        `<li class="gallery-item">
             <a class="gallery-link" href="${largeImageURL}">
-              <img class="gallery-image" src="${webformatURL}" alt="${tags}" />
-              <div>
-                <span>Likes: ${likes}</span>
-                <span>Views: ${views}</span>
-                <span>Comments: ${comments}</span>
-                <span>Downloads: ${downloads}</span>
-              </div>
+              <img
+                class="gallery-image"
+                src="${webformatURL}"
+                alt="${tags}"
+              />
             </a>
+            <div class="text-container">
+                <p class="text"><span class="text-value">Likes</span> ${likes}</p>
+                <p class="text"><span class="text-value">Views</span> ${views}</p>
+                <p class="text"><span class="text-value">Comments</span> ${comments}</p>
+                <p class="text"><span class="text-value">Downloads</span> ${downloads}</p>
+            </div>
           </li>`
-      )
-      .join('')}`
-  );
-};
+    )
+    .join('');
+  if (append) {
+    galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
+  } else {
+    galleryContainer.innerHTML = galleryMarkup;
+  }
 
-export const renderGallery = images => {
-  const galleryMarkup = createGalleryMarkup(images);
-  refs.galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
-  modal.refresh();
-};
-
-export const clearGallery = () => {
-  refs.galleryContainer.innerHTML = '';
-};
-
-export const showLoader = () => {
-  refs.loader.classList.add('show');
-};
-
-export const hideLoader = () => {
-  refs.loader.classList.remove('show');
-};
-
-export const showLoadMoreButton = () => {
-  refs.loadMoreBtn.classList.add('show');
-};
-
-export const hideLoadMoreButton = () => {
-  refs.loadMoreBtn.classList.remove('show');
-};
+  lightbox.refresh();
+}

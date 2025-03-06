@@ -1,16 +1,17 @@
 import axios from 'axios';
-const API_KEY = '47404996-12b53dec464063fd6255bb496';
 
-export const PER_PAGE = 12;
-
-export const fetchImages = async (query, page = 1) => {
-  try {
-    const { data } = await axios.get(
-      `https://pixabay.com/api/?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}&safesearch=true`
-    );
-    return data;
-  } catch (error) {
-    console.log(error.message);
-    throw error;
-  }
+export const fetchSearch = async (search, page = 1, per_page = 40) => {
+  return await axios({
+    method: 'get',
+    url: 'https://pixabay.com/api/',
+    params: {
+      page: page,
+      per_page: per_page,
+      key: '48819306-b63c1eb0b26be23d91021a657',
+      q: search,
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+    },
+  });
 };
